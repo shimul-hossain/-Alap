@@ -80,8 +80,8 @@ function Register() {
                   }) 
             }).catch((error) => {
                 setDisable(false);
-                const errorCode = error.code;
-                console.log(errorCode);                
+                const errorCode = error.code; 
+                toast.error(errorCode.replace('auth/', ''));                
             });
         }
 

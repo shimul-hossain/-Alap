@@ -5,7 +5,9 @@ import {
 } from "firebase/auth";
 
 import { getDatabase,set,ref,push } from "firebase/database";
-import {Link,useNavigate} from "react-router-dom"
+import {Link,useNavigate} from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Login() {
     const auth = getAuth();
@@ -61,16 +63,27 @@ function Login() {
             })
             .catch((error) => {
               setDisable(false);
-            const errorCode = error.code;
-            console.log(errorCode);
+              const errorCode = error.code;
+              toast.error(errorCode.replace('auth/', '')); 
           });
         }
 
     }
   return (
     <div className="max-w-container mt-20 mx-auto"> 
+    <ToastContainer
+        position="bottom-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"/>
         <img className='w-20 mx-auto' src="/logo192.png" alt="" />
-        <p className='text-center text-[30px] font-bold mt-5'>Get started with easily register</p>
+        <p className='text-center text-[30px] font-bold mt-5'>Login</p>
         <p className='text-center mb-5'>Free register and you can enjoy it</p>
         <label className="block mt-5">
             <span className="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
