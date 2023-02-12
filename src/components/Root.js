@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react'
 import { AiOutlineLogout } from 'react-icons/ai';
-import { Outlet } from 'react-router-dom';
+import { Link,Outlet } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { activeUser, loginStatus } from "../slices/userSlice";
 import { useNavigate } from 'react-router-dom';
@@ -28,8 +28,10 @@ function Root() {
      <>
         <nav className="px-10 py-5 border-gray-200 rounded bg-white">
             <div className="max-w-navContainer flex flex-wrap items-center justify-between mx-auto">
-                <a href="#" className="flex items-center">
+                <Link className='flex items-center' to='/'>
                     <img src="logo.png" className="h-6 mr-3 sm:h-10" alt="Flowbite Logo" /> 
+                </Link>
+                <a href="" className="flex items-center">
                 </a> 
                 <button onClick={handleLogout} className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"> 
                 <AiOutlineLogout />

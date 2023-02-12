@@ -4,6 +4,7 @@ import { AiFillLinkedin } from 'react-icons/ai';
 import { CgImage } from 'react-icons/cg';
 import { FiSend } from 'react-icons/fi';
 import { BiDotsHorizontalRounded } from 'react-icons/bi';
+import { Link } from 'react-router-dom';
 
 function Home() {
 
@@ -43,7 +44,7 @@ function Home() {
                   </div>
                   <div className="info">
                     <p className='mt-[12px] text-[14px] font-bold leading-[16.8px]'>Theresa Steward</p>
-                    <p className='text-[10px] leading-[15px]'>iOS developer</p>
+                    <p className='text-[10px]'>iOS developer</p>
                   </div>
               </div>
               <p className="text-[14px] leading-[21px]">
@@ -65,7 +66,7 @@ function Home() {
                   </div>
                   <div className="info">
                     <p className='mt-[12px] text-[14px] font-bold leading-[16.8px]'>Kyle Fisher</p>
-                    <p className='text-[10px] leading-[15px]'>Product designer at Commandor Corp.</p>
+                    <p className='text-[10px]'>Product designer at Commandor Corp.</p>
                   </div>
               </div>
               <p className="text-[14px] leading-[21px]">
@@ -90,7 +91,7 @@ function Home() {
                   </div>
                   <div className="info">
                     <p className='mt-[12px] text-[14px] font-bold leading-[16.8px]'>Audrey Alexander</p>
-                    <p className='text-[10px] leading-[15px]'>Team lead at Google</p>
+                    <p className='text-[10px]'>Team lead at Google</p>
                   </div>
               </div>
               <p className="text-[14px] leading-[21px]">
@@ -105,8 +106,8 @@ function Home() {
               <img className='w-full h-[120px] object-cover' src="/cover.jfif" alt="Cover Photo" />   
               <img className='absolute top-[70px] left-[95px] w-[100px] h-[100px] object-cover rounded-full outline outline-8 outline-white' src="/profile.jfif" alt="Cover Photo" />   
             </div>
-            <p className='text-center text-[14px] leading-[16.8px] font-bold mx-[30px]'>Dmitry Kargaev <span className='inline-block'><AiFillLinkedin/></span></p>
-            <p className='text-center text-[10px] leading-[15px] ml-[29px] mr-[21px]  mt-[6px] mb-[26px]'>
+            <p className='text-center text-[14px] leading-[16.8px] font-bold mx-[30px]'> <Link to='/profile'>Dmitry Kargaev</Link> <span className='inline-block'><AiFillLinkedin/></span></p>
+            <p className='text-center text-[10px] ml-[29px] mr-[21px]  mt-[6px] mb-[26px]'>
             Freelance UX/UI designer, 80 projects in web design, mobile apps (iOS & android) and creative projects. Open to offers.
             </p>
           </div>
@@ -117,18 +118,3 @@ function Home() {
 }
 
 export default Home
-
-{/* <div class="max-w-sm rounded overflow-hidden shadow-lg">
-  <img class="w-full" src="/img/card-top.jpg" alt="Sunset in the mountains">
-  <div class="px-6 py-4">
-    <div class="font-bold text-xl mb-2">The Coldest Sunset</div>
-    <p class="text-gray-700 text-base">
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus quia, nulla! Maiores et perferendis eaque, exercitationem praesentium nihil.
-    </p>
-  </div>
-  <div class="px-6 pt-4 pb-2">
-    <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">#photography</span>
-    <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">#travel</span>
-    <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">#winter</span>
-  </div>
-</div> */}

@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useSelector } from 'react-redux';
 
 function Register() {
+    document.body.style = 'background: #fff;';
     let loginInfo = useSelector((state) => state);
     let navigate = useNavigate();
     useEffect(() => { 

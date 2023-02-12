@@ -10,6 +10,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function Login() {
+    document.body.style = 'background: #fff;';
     let loginInfo = useSelector((state) => state);
     let navigate = useNavigate();
     useEffect(() => { 
