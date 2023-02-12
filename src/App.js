@@ -3,12 +3,15 @@ import './App.css';
 import Register from './pages/Register'
 import Login from './pages/Login'
 import Home from './pages/Home';
+import Root from './components/Root';
 let router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
-      <Route path="/" element={<Register />}></Route>
+      <Route path="/register" element={<Register />}></Route>
       <Route path="/login" element={<Login />}></Route>
-      <Route path="/home" element={<Home />}></Route>
+      <Route path='/' element={<Root/>}>
+        <Route index element={<Home />}></Route>
+      </Route>
     </Route>
   )
 );

@@ -3,17 +3,20 @@ import { createSlice } from '@reduxjs/toolkit'
 export const userSlice = createSlice({
   name: 'user',
   initialState: {
-    loginUser: localStorage.getItem("loginUser")? JSON.parse(localStorage.getItem("loginUser")):null,
+    status: localStorage.getItem("status") ? localStorage.getItem("status"):0,
+    userId: localStorage.getItem("userId") ? localStorage.getItem("userId"):null,
   },
   reducers: {
     activeUser: (state,action) => {
-      state.loginUser = action.payload
+      state.userId = action.payload
     },
-    
+    loginStatus: (state,action) => {
+      state.status = action.payload
+    }, 
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { activeUser } = userSlice.actions
+export const { activeUser, loginStatus } = userSlice.actions
 
 export default userSlice.reducer
