@@ -101,7 +101,7 @@ function Home() {
           </div>
         </div>
         <div className="flex-auto w-[290px]">
-          <div className="profile bg-white overflow-hidden shadow-lg">
+          <div className="profile bg-white overflow-hidden">
             <div className="relative mb-[66px]">
               <img className='w-full h-[120px] object-cover' src="/cover.jfif" alt="Cover Photo" />   
               <img className='absolute top-[70px] left-[95px] w-[100px] h-[100px] object-cover rounded-full outline outline-8 outline-white' src="/profile.jfif" alt="Cover Photo" />   
