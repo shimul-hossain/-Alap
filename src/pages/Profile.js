@@ -45,7 +45,7 @@ function Profile() {
               <div className="experience mt-[39px] bg-white p-[30px]">
                   <p className='mb-[20px] font-bold text-[18px] leading-[21.6px]'>Experience</p>
                   <div className="experieneCart flex">
-                    <img className='w-[54px] h-[54px] mr-[16px] rounded-full object-cover' src="experience.png" alt="" />
+                    <img className='w-[54px] h-[54px] mr-[16px] rounded-full object-cover' src="/experience.png" alt="" />
                     <div className="info">
                       <p className='text-[14px] mb-[10px] font-medium leading-[21px]'>Freelance UX/UI designer</p>
                       <p className='text-[10px] mb-[5px]'><span className='mr-[15px]'>Self Employed</span><span className='font-light'>Around the world</span></p>
@@ -55,7 +55,7 @@ function Profile() {
                   </div>
                   <hr className='opacity-40 mt-[25px] mb-[20px]'/>
                   <div className="experieneCart flex">
-                    <img className='w-[54px] h-[54px] mr-[16px] rounded-full object-cover' src="experience.png" alt="" />
+                    <img className='w-[54px] h-[54px] mr-[16px] rounded-full object-cover' src="/experience.png" alt="" />
                     <div className="info">
                       <p className='text-[14px] mb-[10px] font-medium leading-[21px]'>Freelance UX/UI designer</p>
                       <p className='text-[10px] mb-[5px]'><span className='mr-[15px]'>Self Employed</span><span className='font-light'>Around the world</span></p>
@@ -68,7 +68,7 @@ function Profile() {
               <div className="experience mt-[39px] bg-white p-[30px]">
                   <p className='mb-[20px] font-bold text-[18px] leading-[21.6px]'>Education</p>
                   <div className="experieneCart flex">
-                    <img className='w-[54px] h-[54px] mr-[16px] object-cover' src="education.jfif" alt="" />
+                    <img className='w-[54px] h-[54px] mr-[16px] object-cover' src="/education.jfif" alt="" />
                     <div className="info">
                       <p className='mb-[10px] font-medium text-[14px] leading-[21px]'>Moscow State Linguistic University</p>
                       <p className='text-[10px] mb-[5px]'>Bachelor's degree Field Of StudyComputer and Information Systems Security/Information Assurance</p>

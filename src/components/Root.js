@@ -42,7 +42,7 @@ function Root() {
         theme="dark"/>
             <div className="max-w-navContainer flex flex-wrap items-center justify-between mx-auto">
                 <Link className='flex items-center' to='/'>
-                    <img src="logo.png" className="h-6 mr-3 sm:h-10" alt="Flowbite Logo" /> 
+                    <img src="/logo.png" className="h-6 mr-3 sm:h-10" alt="Flowbite Logo" /> 
                 </Link>
                 <a href="" className="flex items-center">
                 </a> 
