@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 function Profile() {
   let {id} = useParams();
   useEffect(()=> {
-    console.log(id);
+    
   }, []) 
   return (
     <>
