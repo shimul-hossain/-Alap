@@ -20,7 +20,7 @@ function Root() {
 
     let handleLogout = () => {
         dispatch(activeUser(null));
-        localStorage.setItem("userId", null);            
+        localStorage.setItem("user", null);            
         dispatch(loginStatus(0));
         localStorage.setItem("status", 0);   
         navigate("/login");

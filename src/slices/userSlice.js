@@ -4,11 +4,11 @@ export const userSlice = createSlice({
   name: 'user',
   initialState: {
     status: localStorage.getItem("status") ? localStorage.getItem("status"):0,
-    userId: localStorage.getItem("userId") ? localStorage.getItem("userId"):null,
+    user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")):null,
   },
   reducers: {
     activeUser: (state,action) => {
-      state.userId = action.payload
+      state.user = action.payload
     },
     loginStatus: (state,action) => {
       state.status = action.payload

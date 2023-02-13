@@ -8,11 +8,13 @@ import { activeUser, loginStatus } from "../slices/userSlice";
 import {Link,useNavigate} from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {getDatabase, ref, onValue } from "firebase/database"; 
 
 function Login() {
     document.body.style = 'background: #fff;';
     let loginInfo = useSelector((state) => state);
     let navigate = useNavigate();
+    let db = getDatabase();
     useEffect(() => { 
          if(loginInfo.userInfo.status == 1){
              navigate("/");
@@ -63,12 +65,18 @@ function Login() {
           }else{ 
             signInWithEmailAndPassword(auth, data.email, data.password)
             .then((loginInfo) => { 
-              setDisable(false);  
-              dispatch(activeUser(loginInfo.user.uid));
-              localStorage.setItem("userId", loginInfo.user.uid);            
-              dispatch(loginStatus(1));
-              localStorage.setItem("status", 1);            
-              navigate("/");
+                    onValue(ref(db, "users"), (snapshot) => { 
+                      snapshot.forEach(item => {
+                        if(item.key == loginInfo.user.uid){
+                            dispatch(activeUser({...item.val(), uid:loginInfo.user.uid}));
+                            localStorage.setItem("user", JSON.stringify({...item.val(), uid:loginInfo.user.uid}));            
+                            dispatch(loginStatus(1));
+                            setDisable(false);  
+                            localStorage.setItem("status", 1);            
+                            navigate("/");
+                        }
+                      });
+                    });  
             })
             .catch((error) => {
               setDisable(false);
