@@ -4,6 +4,8 @@ import { Link,Outlet } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { activeUser, loginStatus } from "../slices/userSlice";
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Root() {
     document.body.style = 'background: #F7F9FB;';
@@ -27,6 +29,17 @@ function Root() {
   return (  
      <>
         <nav className="px-10 py-5 border-gray-200 rounded bg-white">
+        <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"/>
             <div className="max-w-navContainer flex flex-wrap items-center justify-between mx-auto">
                 <Link className='flex items-center' to='/'>
                     <img src="logo.png" className="h-6 mr-3 sm:h-10" alt="Flowbite Logo" /> 

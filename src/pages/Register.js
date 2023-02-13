@@ -81,7 +81,7 @@ function Register() {
                         navigate('/login')
                     }, 2000);
                     }).catch(error => {
-                      setDisable(false); 
+                      setDisable(false);
                   }) 
             }).catch((error) => {
                 setDisable(false);

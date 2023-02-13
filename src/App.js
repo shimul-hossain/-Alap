@@ -12,7 +12,7 @@ let router = createBrowserRouter(
       <Route path="/login" element={<Login />}></Route>
       <Route path='/' element={<Root/>}>
         <Route index element={<Home />}></Route>
-        <Route path='/profile' element={<Profile/>}></Route>
+        <Route path='/profile/:id' element={<Profile/>}></Route>
       </Route>
     </Route>
   )

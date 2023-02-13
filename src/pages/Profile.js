@@ -1,7 +1,12 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { FiEdit } from 'react-icons/fi';
+import { useParams } from 'react-router-dom';
 
 function Profile() {
+  let {id} = useParams();
+  useEffect(()=> {
+    console.log(id);
+  }, []) 
   return (
     <>
       <div className="flex p-2">
