@@ -4,11 +4,12 @@ import { AiFillLinkedin } from 'react-icons/ai';
 import { CgImage } from 'react-icons/cg';
 import { FiSend } from 'react-icons/fi';
 import { BiDotsHorizontalRounded } from 'react-icons/bi';
+import { BsTrash } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify'
-import { getDatabase,set,ref, push, onValue } from "firebase/database"; 
+import { getDatabase,set,ref, push, onValue, remove } from "firebase/database"; 
 import uuid from 'react-uuid';
-import { getStorage, ref as storeRef, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getStorage, ref as storeRef, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 
 function Home() {
 
@@ -71,6 +72,7 @@ function Home() {
       return
     }
     setFile(e.target.files[0]);
+    e.target.value = null;
   };
 
   let handlePost = () => {
@@ -86,7 +88,7 @@ function Home() {
       uploadBytes(storageRef, file).then((snapshot) => {
         getDownloadURL(storageRef).then((imageUrl)=>{
           set(push(ref(db, 'posts/')), {  
-            userId: user.key,
+            userId: user.uid,
             post : post,
             imageUrl: imageUrl,
             imageId: uniqueId,
@@ -103,7 +105,7 @@ function Home() {
       });
     }else{
       set(push(ref(db, 'posts/')), {  
-        userId: user.key,
+        userId: user.uid,
         post : post,
       }).then(()=>{ 
         setPost('');
@@ -115,8 +117,24 @@ function Home() {
           toast.error('Something went wrong'); 
       }) 
     }
-
   };
+
+  let handleDelete = (item) => {
+    if(item.imageUrl){
+      deleteObject(storeRef(storage, 'posts/'+item.imageId)).then(()=>{
+        remove(ref(db, 'posts/'+item.postId)).then(() => {
+          toast.success('Successfully deleted !!')
+        });
+      }).catch(() => { 
+        toast.error('Something is wrong !!')
+      });
+    }else{
+      remove(ref(db, 'posts/'+item.postId)).then(() => {
+        toast.success('Successfully deleted !!')
+      });
+    }
+    
+  }
 
   return (
     <>
@@ -150,10 +168,19 @@ function Home() {
           </div>
           {allData.map(item => (
             <div key={item.postId} className="postCard bg-white mt-[35px]">
-              <div className="postHeader text-right">
-                <button className='p-[15px]'>
-                  <BiDotsHorizontalRounded />
-                </button>  
+              <div className="postHeader text-right dropdown">
+                {item.userId == user.uid && 
+                  <>
+                    <button type="button" className='p-[15px]'>
+                      <BiDotsHorizontalRounded />
+                    </button>  
+                      <div className="opacity-0 invisible dropdown-menu transition-all duration-300 transform origin-top-right -translate-y-2 scale-95">
+                        <div className="absolute right-0 mt-1 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none">
+                          <button type='button' onClick={() => handleDelete(item)} className="text-gray-700 flex justify-between w-full px-4 py-2 text-sm leading-5 text-left"><span className='p-[3px]'><BsTrash/></span> Delete</button> 
+                        </div>  
+                    </div>
+                  </>
+                }
               </div>
               <hr  className='opacity-40' />
               <div className="postBody px-[30px] pb-[70px]">
