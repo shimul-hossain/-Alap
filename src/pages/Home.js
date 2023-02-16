@@ -23,6 +23,7 @@ function Home() {
   let [file, setFile] = useState(); 
   let [preview, setPreview] = useState(); 
   let [loader, setLoader]  = useState(false);
+  let [deleteLoader, setDeleteLoader] = useState(false);
   let [allData, setAllData]  = useState([]);
 
   useEffect(() => {  
@@ -120,17 +121,21 @@ function Home() {
   };
 
   let handleDelete = (item) => {
+    setDeleteLoader(true)
     if(item.imageUrl){
       deleteObject(storeRef(storage, 'posts/'+item.imageId)).then(()=>{
         remove(ref(db, 'posts/'+item.postId)).then(() => {
           toast.success('Successfully deleted !!')
+          setDeleteLoader(false)
         });
       }).catch(() => { 
         toast.error('Something is wrong !!')
+        setDeleteLoader(false)
       });
     }else{
       remove(ref(db, 'posts/'+item.postId)).then(() => {
         toast.success('Successfully deleted !!')
+        setDeleteLoader(false)
       });
     }
     
@@ -175,8 +180,17 @@ function Home() {
                       <BiDotsHorizontalRounded />
                     </button>  
                       <div className="opacity-0 invisible dropdown-menu transition-all duration-300 transform origin-top-right -translate-y-2 scale-95">
-                        <div className="absolute right-0 mt-1 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none">
-                          <button type='button' onClick={() => handleDelete(item)} className="text-gray-700 flex justify-between w-full px-4 py-2 text-sm leading-5 text-left"><span className='p-[3px]'><BsTrash/></span> Delete</button> 
+                        <div className="absolute right-0 mt-1 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none"> 
+                          {deleteLoader ? 
+                              <button className="px-8 py-2 rounded text-white bg-primary-btn w-full text-sm leading-5 text-left cursor-not-allowed">
+                                <svg className="animate-spin mx-auto h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                              </button>
+                            : 
+                              <button type='button' onClick={() => handleDelete(item)} className="text-gray-700 flex justify-between w-full px-4 py-2 text-sm leading-5 text-left"><span className='p-[3px]'><BsTrash/></span> Delete</button> 
+                            }
                         </div>  
                     </div>
                   </>
@@ -186,7 +200,7 @@ function Home() {
               <div className="postBody px-[30px] pb-[70px]">
                 <div className="postUser flex my-[15px]">
                     <div className="avatar">
-                        <img className='h-[52px] mr-[15px] w-[52px] rounded-full object-cover' src={item.userProfile?item.userProfile:'avatar.png' } alt="Avator"/>
+                        <img className='h-[52px] mr-[15px] w-[52px] rounded-full object-cover' src={item.userProfile?item.userProfile:'/avatar.png' } alt="Avator"/>
                     </div>
                     <div className="info">
                       <p className='mt-[12px] text-[14px] font-bold leading-[16.8px]'>{item.userName}</p>
@@ -208,7 +222,7 @@ function Home() {
             <div className="profile bg-white overflow-hidden">
               <div className="relative mb-[66px]">
                 <img className='w-full h-[120px] object-cover' src={user.coverUrl ? user.coverUrl : "/cover.jfif" }  alt="Cover Photo" />   
-                <img className='absolute top-[70px] left-[95px] w-[100px] h-[100px] object-cover rounded-full outline outline-8 outline-white' src={user.profileUrl ? user.profileUrl : "avatar.png"} alt="Cover Photo" />   
+                <img className='absolute top-[70px] left-[95px] w-[100px] h-[100px] object-cover rounded-full outline outline-8 outline-white' src={user.profileUrl ? user.profileUrl : "/avatar.png"} alt="Cover Photo" />   
               </div>
               <p className='text-center text-[14px] leading-[16.8px] font-bold mx-[30px]'> <Link to={'/profile/'+user.uid}>{user.name}</Link> <span className='inline-block'><AiFillLinkedin/></span></p>
                 {user.about ? 
