@@ -229,15 +229,11 @@ function Home() {
                 <img className='absolute top-[70px] left-[95px] w-[100px] h-[100px] object-cover rounded-full outline outline-8 outline-white' src={user.profileUrl ? user.profileUrl : "/avatar.png"} alt="Cover Photo" />   
               </div>
               <p className='text-center text-[14px] leading-[16.8px] font-bold mx-[30px]'> <Link to={'/profile/'+user.uid}>{user.name}</Link> <span className='inline-block'><AiFillLinkedin/></span></p>
-                {user.about ? 
-                  <p className='text-center text-[10px] ml-[29px] mr-[21px]  mt-[6px] mb-[26px]'>
-                    {user.about}
-                  </p>
-                :
-                  <p className='text-center text-[10px] ml-[29px] mr-[21px]  mt-[6px] mb-[26px]'>
-                    Write something about yourself
-                  </p>
-                }
+              <p className='text-center text-[10px] ml-[29px] mr-[21px]  mt-[6px] mb-[26px]'>
+                {user.quote || 
+                    <span>Write Few Words About Your Selft</span>
+                  }
+                </p>
             </div>
           </div>
         }

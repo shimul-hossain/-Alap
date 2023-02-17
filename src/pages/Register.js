@@ -74,7 +74,7 @@ function Register() {
                 // sendEmailVerification(auth.currentUser)
                 set(ref(db, 'users/' + user.user.uid), {
                     name: data.name,
-                    email: user.user.email,
+                    email: user.user.email, 
                   }).then(()=>{ 
                     toast("Registration Successful.");
                     setTimeout(() => {

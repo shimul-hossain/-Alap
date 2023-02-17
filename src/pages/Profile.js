@@ -4,7 +4,7 @@ import { FiEdit } from 'react-icons/fi';
 import { useParams } from 'react-router-dom';
 import { getDatabase,ref,set, onValue, remove } from "firebase/database"; 
 import { BiDotsHorizontalRounded } from 'react-icons/bi';
-import { BsTrash } from 'react-icons/bs';
+import { BsTrash,BsPencil } from 'react-icons/bs';
 import { getStorage, ref as storeRef, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import { toast } from 'react-toastify'
 import Loader from '../components/Loader';
@@ -19,6 +19,14 @@ function Profile() {
   let [deleteLoader, setDeleteLoader] = useState(false);
   let [coverLoader, setCoverLoader] = useState(false);
   let [profileLoader, setProfileLoader] = useState(false);
+  let [name, setName] = useState('');
+  let [quote, setQuote] = useState('');
+  let [about, setAbout] = useState('');
+  let [editStatus, setEditStatus] = useState({
+    name : false,
+    quote : false,
+    about : false,
+  })
   let db = getDatabase();
   let storage = getStorage();
   useEffect(()=> { 
@@ -26,6 +34,9 @@ function Profile() {
       snapshot.forEach((item) => {
         if(item.key == id){
           setUser({...item.val(), uid: item.key})
+          setName(item.val().name)
+          setQuote(item.val().quote)
+          setAbout(item.val().about)
         } 
       }); 
     });
@@ -123,6 +134,63 @@ function Profile() {
         });
       } 
   };
+  let handleNameChange = ()=> { 
+    setEditStatus({...editStatus,name:false })
+    if(name.trim() == ''){
+      toast.error('Name is required');
+      setName(user.name);
+    }else{
+      if(user.name != name.trim()){
+        set((ref(db, 'users/'+loginUser.uid)), {   
+          ...user,
+          name: name, 
+        }).then(()=>{      
+            toast.success('Name Updated Successfully');
+          }).catch(() => {   
+            toast.error('Something went wrong');
+          }) 
+      }
+      
+    }
+  }
+  let handleQuoteChange = ()=> { 
+    setEditStatus({...editStatus,quote:false })
+    if(quote.trim() == ''){
+      toast.error('Quote is required');
+      setQuote(user.quote);
+    }else{
+      if(user.quote != quote.trim()){
+        set((ref(db, 'users/'+loginUser.uid)), {   
+          ...user,
+          quote: quote, 
+        }).then(()=>{      
+            toast.success('Quote Updated Successfully');
+          }).catch(() => {   
+            toast.error('Something went wrong');
+          }) 
+      }
+      
+    }
+  }
+  let handleAboutChange = ()=> { 
+    setEditStatus({...editStatus,about:false })
+    if(about.trim() == ''){
+      toast.error('Quote is required');
+      setAbout(user.about);
+    }else{
+      if(user.about != about.trim()){
+        set((ref(db, 'users/'+loginUser.uid)), {   
+          ...user,
+          about: about, 
+        }).then(()=>{      
+            toast.success('About Updated Successfully');
+          }).catch(() => {   
+            toast.error('Something went wrong');
+          }) 
+      }
+      
+    }
+  }
   return (
     <>
     {user && 
@@ -160,9 +228,33 @@ function Profile() {
                     }
                   </>
                 }
-                <div className='ml-[25px]'>
-                    <p className='font-bold text-[18px] leading-[21.6px]'>{user.name}</p>
-                    <p className='mt-[10px] text-[14px] leading-[21px]'>Freelance UX/UI designer, 80+ projects in web design, mobile apps  (iOS & android) and creative projects. Open to offers.</p>
+                <div className='ml-[25px] w-full'>
+                    <p className='font-bold text-[18px] leading-[21.6px]'>
+                    {editStatus.name? 
+                    <input type="text" autoFocus onBlur={handleNameChange} value={name} onChange={(e)=>setName(e.target.value)}  className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none block w-full rounded-md sm:text-sm focus:ring-1"/>
+                    :
+                    <>
+                    {user.name}  
+                      {loginUser.uid == user.uid &&
+                        <button onClick={() => setEditStatus({...editStatus,name:true })} className='ml-[10px]'> <BsPencil/></button>
+                      }
+                    </>
+                    }
+                      </p>
+                    <p className='mt-[10px] text-[14px] leading-[21px]'>
+                      {editStatus.quote?
+                        <textarea autoFocus defaultValue={quote} onBlur={handleQuoteChange} onChange={(e)=>setQuote(e.target.value)}  className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none block w-full rounded-md sm:text-sm focus:ring-1"></textarea>
+                      :
+                      <>
+                        {user.quote || 
+                          <span>Write Few Words About Your Selft</span>
+                        }
+                        {loginUser.uid == user.uid &&
+                          <button onClick={() => setEditStatus({...editStatus,quote:true })} className='ml-[10px]'> <BsPencil/></button>
+                        }
+                      </>
+                      }
+                      </p>
                     <button className='bg-primary-btn text-[12px] font-medium leading-[14.4px] text-white py-[9px] px-[45px] rounded mt-[14px] mb-[10px]'>Contact info</button>
                 </div>
             </div> 
@@ -176,11 +268,20 @@ function Profile() {
             {tabActive == 'profile' && 
               <div className='profileInfo'>
                 <div className="about bg-white mt-[30px] p-[30px]">
-                  <p className='text-[18px] leading-[21.6px] font-bold'>About</p>
-                  <p className='mt-[10px] text-[14px] leading-[21px]'>I'm more experienced in eCommerce web projects and mobile banking apps, but also like to work with creative projects, such as landing pages or unusual corporate websites. </p>
-                  <button className='pl-[5px] mt-[20px] text-[12px] leading-[14.4px] font-medium  text-primary-btn'>
+                  <p className='text-[18px] leading-[21.6px] font-bold'>About 
+                  {(!editStatus.about && loginUser.uid == user.uid) &&  
+                    <button onClick={() => setEditStatus({...editStatus,about:true })} className='ml-[10px]'> <BsPencil/></button>
+                  }
+                  </p>
+                  {editStatus.about?
+                  <textarea autoFocus rows={5} defaultValue={about} onBlur={handleAboutChange} onChange={(e)=>setAbout(e.target.value)}  className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none block w-full rounded-md sm:text-sm focus:ring-1"></textarea>
+                  :
+                  <p className='mt-[10px] text-[14px] leading-[21px]'>{user.about}</p>
+                  }
+
+                  {/* <button className='pl-[5px] mt-[20px] text-[12px] leading-[14.4px] font-medium  text-primary-btn'>
                     SEE MORE
-                  </button>
+                  </button> */}
                 </div>
 
                 <div className="experience mt-[39px] bg-white p-[30px]">
