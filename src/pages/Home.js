@@ -10,11 +10,21 @@ import { toast } from 'react-toastify'
 import { getDatabase,set,ref, push, onValue, remove } from "firebase/database"; 
 import uuid from 'react-uuid';
 import { getStorage, ref as storeRef, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
+import Loader from '../components/Loader';
 
 function Home() {
 
   let data = useSelector((state) => state);
-  let user = data.userInfo.user;
+  let [user, setUser] = useState();
+  useEffect(()=> { 
+    onValue(ref(db, "users"), (snapshot) => {
+      snapshot.forEach((item) => {
+        if(item.key == data.userInfo.user.uid){
+          setUser({...item.val(), uid: item.key})
+        } 
+      }); 
+    });
+  }, []) 
   let db = getDatabase();
   let storage = getStorage();
   let uniqueId = uuid();
@@ -155,10 +165,7 @@ function Home() {
                   <label htmlFor="postImage" className='inline-block pr-5 opacity-20'><CgImage/></label>
                   {loader?
                     <button className="p-1 rounded text-white bg-primary-btn cursor-not-allowed">
-                      <svg className="animate-spin mx-auto h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
+                       <Loader/>
                     </button>
                   :
                     <button onClick={handlePost} className='p-1 rounded text-white bg-primary-btn'><FiSend/></button>
@@ -183,10 +190,7 @@ function Home() {
                         <div className="absolute right-0 mt-1 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none"> 
                           {deleteLoader ? 
                               <button className="px-8 py-2 rounded text-white bg-primary-btn w-full text-sm leading-5 text-left cursor-not-allowed">
-                                <svg className="animate-spin mx-auto h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                </svg>
+                                <Loader/>
                               </button>
                             : 
                               <button type='button' onClick={() => handleDelete(item)} className="text-gray-700 flex justify-between w-full px-4 py-2 text-sm leading-5 text-left"><span className='p-[3px]'><BsTrash/></span> Delete</button> 

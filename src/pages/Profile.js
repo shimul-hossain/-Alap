@@ -1,18 +1,24 @@
 import React, { useEffect, useState } from 'react'
+import { useSelector } from "react-redux";
 import { FiEdit } from 'react-icons/fi';
 import { useParams } from 'react-router-dom';
-import { getDatabase,ref, onValue, remove } from "firebase/database"; 
+import { getDatabase,ref,set, onValue, remove } from "firebase/database"; 
 import { BiDotsHorizontalRounded } from 'react-icons/bi';
 import { BsTrash } from 'react-icons/bs';
 import { getStorage, ref as storeRef, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import { toast } from 'react-toastify'
+import Loader from '../components/Loader';
 
 function Profile() {
   let {id} = useParams();
+  let data = useSelector((state) => state);
+  let loginUser = data.userInfo.user; 
   let [user, setUser] = useState();
   let [tabActive, setTabActive]  = useState('profile');
   let [allData, setAllData]  = useState([]);
   let [deleteLoader, setDeleteLoader] = useState(false);
+  let [coverLoader, setCoverLoader] = useState(false);
+  let [profileLoader, setProfileLoader] = useState(false);
   let db = getDatabase();
   let storage = getStorage();
   useEffect(()=> { 
@@ -70,20 +76,90 @@ function Profile() {
       });
     } 
   }
+  
+  let handleCover = (e) => {
+    setCoverLoader(true)
+    if (!e.target.files || e.target.files.length === 0) {
+      setCoverLoader(false)
+      return
+    }else{ 
+      uploadBytes(storeRef(storage, 'cover/'+loginUser.uid), e.target.files[0]).then((snapshot) => {
+        getDownloadURL(storeRef(storage, 'cover/'+loginUser.uid)).then((imageUrl)=>{
+          set((ref(db, 'users/'+loginUser.uid)), {   
+            ...user,
+            coverUrl: imageUrl, 
+          }).then(()=>{    
+              setCoverLoader(false)
+              e.target.value = null;
+              toast.success('Cover Photo Updated Successfully');
+            }).catch(() => {  
+              setCoverLoader(false)
+              toast.error('Something went wrong');
+            }) 
+          })
+        });
+      } 
+  };
+  let handleProfile = (e) => {
+    setProfileLoader(true)
+    if (!e.target.files || e.target.files.length === 0) {
+      setCoverLoader(false)
+      return
+    }else{ 
+      uploadBytes(storeRef(storage, 'profile/'+loginUser.uid), e.target.files[0]).then((snapshot) => {
+        getDownloadURL(storeRef(storage, 'profile/'+loginUser.uid)).then((imageUrl)=>{
+          set((ref(db, 'users/'+loginUser.uid)), {   
+            ...user,
+            profileUrl: imageUrl, 
+          }).then(()=>{    
+              setProfileLoader(false)
+              e.target.value = null;
+              toast.success('Profile Photo Updated Successfully');
+            }).catch(() => {  
+              setProfileLoader(false)
+              toast.error('Something went wrong');
+            }) 
+          })
+        });
+      } 
+  };
   return (
     <>
     {user && 
       <div className="flex p-2">
         <div className="flex-auto relative mb-20 w-[850px] mr-[40px]">
             <img className='h-[180px] w-full object-cover' src={user.coverUrl ? user.coverUrl : "/cover.jfif" } alt="" />
-            <label className='absolute top-[20px] right-[57px] bg-white text-[12px] leading-[14.4px] rounded p-[12px]'>
-                <span className='inline-block mr-[10px]'><FiEdit/></span>Edit profile
-            </label>
+            {loginUser.uid == user.uid &&
+              <>
+                <input type="file"accept='image/*' hidden onChange={handleCover} id='coverImage' />
+                {coverLoader ? 
+                  <button className="absolute top-[20px] right-[57px] px-[41px] py-[12px] rounded text-white bg-primary-btn text-sm leading-5 text-left cursor-not-allowed">
+                    <Loader/>
+                  </button>
+                :
+                  <label htmlFor='coverImage' className='absolute top-[20px] right-[57px] bg-white text-[12px] leading-[14.4px] rounded p-[12px]'>
+                      <span className='inline-block mr-[10px]'><FiEdit/></span>Edit cover
+                  </label>
+                }
+              </>
+            }
 
             <div className="profile flex relative bg-white p-[25px]">
                 <div className="profile-image w-[220px]">
                     <img className='absolute -top-[25px] w-[170px] h-[170px] rounded-full outline outline-8 outline-white object-cover' src={user.profileUrl ? user.profileUrl : "/avatar.png"} alt="" />
                 </div>
+                {loginUser.uid == user.uid &&
+                  <>
+                    <input type="file"accept='image/*' hidden onChange={handleProfile} id='profileImage' />
+                    {profileLoader ? 
+                      <button className="absolute bottom-[50px] max-[816px]:bottom-[70px] left-[180px] p-1 rounded text-white bg-primary-btn text-sm leading-5 text-left cursor-not-allowed">
+                        <Loader/>
+                      </button>
+                      :
+                      <label htmlFor='profileImage' className='absolute bottom-[50px]  bg-white max-[816px]:bottom-[70px] left-[180px]'><FiEdit/></label>
+                    }
+                  </>
+                }
                 <div className='ml-[25px]'>
                     <p className='font-bold text-[18px] leading-[21.6px]'>{user.name}</p>
                     <p className='mt-[10px] text-[14px] leading-[21px]'>Freelance UX/UI designer, 80+ projects in web design, mobile apps  (iOS & android) and creative projects. Open to offers.</p>
@@ -158,10 +234,7 @@ function Profile() {
                           <div className="absolute right-0 mt-1 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none">
                             {deleteLoader ? 
                               <button className="px-8 py-2 rounded text-white bg-primary-btn w-full text-sm leading-5 text-left cursor-not-allowed">
-                                <svg className="animate-spin mx-auto h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                </svg>
+                                <Loader/>
                               </button>
                             : 
                               <button type='button' onClick={() => handleDelete(item)} className="text-gray-700 flex justify-between w-full px-4 py-2 text-sm leading-5 text-left"><span className='p-[3px]'><BsTrash/></span> Delete</button> 
