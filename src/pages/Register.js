@@ -75,6 +75,7 @@ function Register() {
                 set(ref(db, 'users/' + user.user.uid), {
                     name: data.name,
                     email: user.user.email, 
+                    designation: 'New User', 
                   }).then(()=>{ 
                     toast("Registration Successful.");
                     setTimeout(() => {

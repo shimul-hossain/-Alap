@@ -22,10 +22,12 @@ function Profile() {
   let [name, setName] = useState('');
   let [quote, setQuote] = useState('');
   let [about, setAbout] = useState('');
+  let [designation, setDesignation] = useState('');
   let [editStatus, setEditStatus] = useState({
     name : false,
     quote : false,
     about : false,
+    designation : false,
   })
   let db = getDatabase();
   let storage = getStorage();
@@ -37,6 +39,7 @@ function Profile() {
           setName(item.val().name)
           setQuote(item.val().quote)
           setAbout(item.val().about)
+          setDesignation(item.val().designation)
         } 
       }); 
     });
@@ -143,7 +146,7 @@ function Profile() {
       if(user.name != name.trim()){
         set((ref(db, 'users/'+loginUser.uid)), {   
           ...user,
-          name: name, 
+          name: name.trim(), 
         }).then(()=>{      
             toast.success('Name Updated Successfully');
           }).catch(() => {   
@@ -162,7 +165,7 @@ function Profile() {
       if(user.quote != quote.trim()){
         set((ref(db, 'users/'+loginUser.uid)), {   
           ...user,
-          quote: quote, 
+          quote: quote.trim(), 
         }).then(()=>{      
             toast.success('Quote Updated Successfully');
           }).catch(() => {   
@@ -181,9 +184,28 @@ function Profile() {
       if(user.about != about.trim()){
         set((ref(db, 'users/'+loginUser.uid)), {   
           ...user,
-          about: about, 
+          about: about.trim(), 
         }).then(()=>{      
             toast.success('About Updated Successfully');
+          }).catch(() => {   
+            toast.error('Something went wrong');
+          }) 
+      }
+      
+    }
+  }
+  let handleDesignationChange = ()=> { 
+    setEditStatus({...editStatus,designation:false })
+    if(designation.trim() == ''){
+      toast.error('Quote is required');
+      setAbout(user.designation);
+    }else{
+      if(user.designation != designation.trim()){
+        set((ref(db, 'users/'+loginUser.uid)), {   
+          ...user,
+          designation: designation.trim(), 
+        }).then(()=>{      
+            toast.success('Designation Updated Successfully');
           }).catch(() => {   
             toast.error('Something went wrong');
           }) 
@@ -201,34 +223,35 @@ function Profile() {
               <>
                 <input type="file"accept='image/*' hidden onChange={handleCover} id='coverImage' />
                 {coverLoader ? 
-                  <button className="absolute top-[20px] right-[57px] px-[41px] py-[12px] rounded text-white bg-primary-btn text-sm leading-5 text-left cursor-not-allowed">
+                  <button className="absolute top-[20px] right-[7%] px-[41px] py-[12px] rounded text-white bg-primary-btn text-sm leading-5 text-left cursor-not-allowed">
                     <Loader/>
                   </button>
-                :
-                  <label htmlFor='coverImage' className='absolute top-[20px] right-[57px] bg-white text-[12px] leading-[14.4px] rounded p-[12px]'>
+                : 
+                  <label htmlFor='coverImage' className='absolute top-[20px] right-[7%] bg-white text-[12px] leading-[14.4px] rounded p-[12px]'>
                       <span className='inline-block mr-[10px]'><FiEdit/></span>Edit cover
                   </label>
-                }
+                 } 
               </>
             }
 
-            <div className="profile flex relative bg-white p-[25px]">
+            <div className="profile flex max-[900px]:flex-wrap relative bg-white p-[25px]">
                 <div className="profile-image w-[220px]">
-                    <img className='absolute -top-[25px] w-[170px] h-[170px] rounded-full outline outline-8 outline-white object-cover' src={user.profileUrl ? user.profileUrl : "/avatar.png"} alt="" />
-                </div>
-                {loginUser.uid == user.uid &&
-                  <>
-                    <input type="file"accept='image/*' hidden onChange={handleProfile} id='profileImage' />
-                    {profileLoader ? 
-                      <button className="absolute bottom-[50px] max-[816px]:bottom-[70px] left-[180px] p-1 rounded text-white bg-primary-btn text-sm leading-5 text-left cursor-not-allowed">
-                        <Loader/>
-                      </button>
-                      :
-                      <label htmlFor='profileImage' className='absolute bottom-[50px]  bg-white max-[816px]:bottom-[70px] left-[180px]'><FiEdit/></label>
+                    <img className='absolute -top-[25px] w-[170px] max-[900px]:w-[100px] h-[170px] max-[900px]:h-[100px] rounded-full outline outline-8 outline-white object-cover' src={user.profileUrl ? user.profileUrl : "/avatar.png"} alt="" />
+                    {loginUser.uid == user.uid &&
+                      <>
+                        <input type="file"accept='image/*' hidden onChange={handleProfile} id='profileImage' />
+                        {profileLoader ? 
+                          <button className="absolute left-[180px]  max-[900px]:left-[115px] top-[100px] max-[900px]:top-[50px] p-1 rounded text-white bg-primary-btn text-sm leading-5 text-left cursor-not-allowed">
+                            <Loader/>
+                          </button>
+                          :
+                          <label htmlFor='profileImage' className='absolute left-[180px]  max-[900px]:left-[115px] top-[100px] max-[900px]:top-[50px]  bg-white '><FiEdit/></label>
+                        }
+                      </>
                     }
-                  </>
-                }
-                <div className='ml-[25px] w-full'>
+                </div>
+               
+                <div className='min-[901px]:ml-[25px] w-full max-[900px]:mt-[70px]'>
                     <p className='font-bold text-[18px] leading-[21.6px]'>
                     {editStatus.name? 
                     <input type="text" autoFocus onBlur={handleNameChange} value={name} onChange={(e)=>setName(e.target.value)}  className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none block w-full rounded-md sm:text-sm focus:ring-1"/>
@@ -240,6 +263,18 @@ function Profile() {
                       }
                     </>
                     }
+                      </p>
+                      <p className='font-medium text-[16px] leading-[21.6px]'> 
+                        {editStatus.designation? 
+                          <input type="text" autoFocus onBlur={handleDesignationChange} value={designation} onChange={(e)=>setDesignation(e.target.value)}  className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none block w-full rounded-md sm:text-sm focus:ring-1"/>
+                          :
+                          <>
+                          {user.designation}  
+                            {loginUser.uid == user.uid &&
+                              <button onClick={() => setEditStatus({...editStatus,designation:true })} className='ml-[10px]'> <BsPencil/></button>
+                            }
+                          </>
+                          }
                       </p>
                     <p className='mt-[10px] text-[14px] leading-[21px]'>
                       {editStatus.quote?
