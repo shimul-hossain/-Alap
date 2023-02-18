@@ -207,7 +207,7 @@ function Home() {
                         <img className='h-[52px] mr-[15px] w-[52px] rounded-full object-cover' src={item.userProfile?item.userProfile:'/avatar.png' } alt="Avator"/>
                     </div>
                     <div className="info">
-                      <p className='mt-[12px] text-[14px] font-bold leading-[16.8px]'>{item.userName}</p>
+                      <p className='mt-[12px] text-[14px] font-bold leading-[16.8px]'><Link to={'/profile/'+item.userId}>{item.userName}</Link></p>
                       <p className='text-[10px]'>{item.userDesignation}</p>
                     </div>
                 </div>

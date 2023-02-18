@@ -56,7 +56,7 @@ function Profile() {
       let arr = [];
       snapshot.forEach((item) => {
          let postUser = users.find(user => user.uid == item.val().userId);
-         if(postUser){
+         if(postUser && item.val().userId == id){
            arr.push({ 
             ...item.val(), 
             postId: item.key,
@@ -361,7 +361,7 @@ function Profile() {
               allData.map(item => (
               <div key={item.postId} className="postCard bg-white mt-[35px]">
                 <div className="postHeader text-right dropdown">
-                  {item.userId == user.uid && 
+                  {item.userId == loginUser.uid && 
                     <>
                       <button type="button" className='p-[15px]'>
                         <BiDotsHorizontalRounded />
